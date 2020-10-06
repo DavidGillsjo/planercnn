@@ -284,8 +284,6 @@ class PlaneRecoverDetector():
             masks = torch.from_numpy(masks).float().cuda()
             XYZ_pred, detection_mask, plane_XYZ = calcXYZModule(self.config, camera, detections, masks, torch.zeros((1, 640, 640)).cuda(), return_individual=True)
             depth = XYZ_pred[1:2]
-            print(planes)
-            print(np.unique(segmentation))
             for mask_index, mask in enumerate(masks.detach().cpu().numpy()):
                 cv2.imwrite('test/mask_' + str(mask_index) + '.png', drawMaskImage(mask))
                 continue
@@ -589,6 +587,7 @@ def evaluate(options):
                 for c in range(len(detection_pair)):
                     np.save(options.test_dir + '/' + str(sampleIndex % 500) + '_plane_parameters_' + str(c) + '.npy', detection_pair[c]['detection'][:, 6:9])
                     np.save(options.test_dir + '/' + str(sampleIndex % 500) + '_plane_masks_' + str(c) + '.npy', detection_pair[c]['masks'][:, 80:560])
+                    np.save(options.test_dir + '/' + str(sampleIndex % 500) + '_plane_XYZ_' + str(c) + '.npy', detection_pair[c]['XYZ'][:, 80:560])
                     continue
                 pass
 
